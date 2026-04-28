@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: 245 247 251;
+  --panel: 255 255 255;
+  --edge: 203 213 225;
+  --glow: 14 165 233;
+}
+
+.dark {
+  --canvas: 2 8 23;
+  --panel: 15 23 42;
+  --edge: 51 65 85;
+  --glow: 245 158 11;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-canvas text-slate-900 antialiased dark:text-slate-100;
+  font-family: "Aptos", "Segoe UI Variable Display", "Trebuchet MS", sans-serif;
+  background-image:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.16), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.12), transparent 26%),
+    linear-gradient(180deg, rgba(255,255,255,0.55), rgba(241,245,249,0.9));
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Bahnschrift", "Aptos Display", "Segoe UI Variable Display", sans-serif;
+}
+
+.dark body {
+  background-image:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.22), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.16), transparent 26%),
+    linear-gradient(180deg, rgba(2,8,23,0.95), rgba(15,23,42,0.92));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-slate-300 dark:bg-slate-700;
+}
+
+.panel {
+  @apply rounded-3xl border border-edge/70 bg-panel/85 shadow-panel backdrop-blur-xl;
+}
+
+.metric-card {
+  @apply panel p-5 transition duration-300 hover:-translate-y-1 hover:border-sky-300/60 dark:hover:border-amber-300/30;
+}
+
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+  background-size: 32px 32px;
+}

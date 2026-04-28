@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  lead
+  member
+}
+
+enum Domain {
+  Aerodynamics
+  Structures
+  Electronics
+  Propulsion
+  CAD
+  Simulation
+  Manufacturing
+}
+
+enum AttendanceStatus {
+  Present
+  Absent
+  OnLeave
+  Late
+}
+
+enum ProgressStatus {
+  Completed
+  InProgress
+  Pending
+}
+
+enum ApprovalStatus {
+  approved
+  pending_review
+  changes_requested
+}
+
+enum TopicStatus {
+  not_started
+  in_progress
+  completed
+}
+
+model User {
+  id          String            @id @default(cuid())
+  name        String
+  email       String            @unique
+  password    String
+  role        Role
+  domain      Domain
+  year        String
+  batch       String
+  teamRole    String
+  avatarUrl   String
+  bio         String
+  joinedAt    DateTime          @default(now())
+  phone       String
+  status      String
+  logs        DailyLog[]
+  attendance  AttendanceEntry[]
+  learning    LearningTopic[]
+}
+
+model DailyLog {
+  id              String         @id @default(cuid())
+  userId          String
+  date            DateTime
+  topicsStudied   String[]
+  conceptsRevised String[]
+  tasksCompleted  String[]
+  toolsPracticed  String[]
+  researchWork    String[]
+  problemsFaced   String[]
+  hoursWorked     Float
+  learningSummary String
+  status          ProgressStatus
+  attachments     Json
+  links           String[]
+  approvalStatus  ApprovalStatus
+  mentorComment   String?
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AttendanceEntry {
+  id         String           @id @default(cuid())
+  userId     String
+  date       DateTime
+  status     AttendanceStatus
+  reason     String?
+  markedAt   DateTime         @default(now())
+  overrideBy String?
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LearningTopic {
+  id               String      @id @default(cuid())
+  userId           String
+  title            String
+  domain           Domain
+  category         String
+  roadmapStage     String
+  assignedBy       String
+  status           TopicStatus
+  revisionComplete Boolean     @default(false)
+  mentorFeedback   String
+  skillTags        String[]
+  completedAt      DateTime?
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
