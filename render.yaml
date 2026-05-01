@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: aerolog-api
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @aerodesign/shared build && pnpm --filter @aerodesign/api build
+    startCommand: pnpm --filter @aerodesign/api start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 4000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false

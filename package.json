@@ -8,9 +8,9 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:web": "npm --workspace @aerodesign/web run dev",
-    "dev:api": "npm --workspace @aerodesign/api run dev",
-    "build": "npm run build --workspace @aerodesign/shared && npm run build --workspace @aerodesign/api && npm run build --workspace @aerodesign/web",
-    "lint": "npm run lint --workspace @aerodesign/web && npm run lint --workspace @aerodesign/api"
+    "dev:web": "pnpm --filter @aerodesign/web dev",
+    "dev:api": "pnpm --filter @aerodesign/api dev",
+    "build": "pnpm --filter @aerodesign/shared build && pnpm --filter @aerodesign/api build && pnpm --filter @aerodesign/web build",
+    "lint": "pnpm --filter @aerodesign/web lint && pnpm --filter @aerodesign/api lint"
   }
 }

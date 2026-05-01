@@ -7,5 +7,8 @@ coverage
 uploads
 *.log
 package-lock.json
-pnpm-lock.yaml
 yarn.lock
+.tools
+.corepack
+.npm-cache
+.vercel

@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aerodesign/shared": "workspace:*",
+    "@aerodesign/shared": "file:../../packages/shared",
     "clsx": "^2.1.1",
     "framer-motion": "^12.10.5",
     "lucide-react": "^0.511.0",
