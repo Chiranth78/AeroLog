@@ -12,3 +12,5 @@ yarn.lock
 .corepack
 .npm-cache
 .vercel
+
+.vercel

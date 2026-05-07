@@ -1,35 +1,28 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { APP_API_URL, SESSION_COOKIE_NAME } from "../../../../lib/auth-config";
+import { SESSION_COOKIE_NAME } from "../../../../lib/auth-config";
+import { loginWithCredentials } from "../../../../lib/auth-local";
 
 export async function POST(request: Request) {
-  const payload = await request.json();
+  const payload = (await request.json()) as { email?: string; password?: string };
 
-  try {
-    const response = await fetch(`${APP_API_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
-    }
-
-    const store = await cookies();
-    store.set(SESSION_COOKIE_NAME, data.token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7
-    });
-
-    return NextResponse.json({ user: data.user });
-  } catch {
-    return NextResponse.json({ message: "Backend auth service unavailable" }, { status: 503 });
+  if (!payload.email || !payload.password) {
+    return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
   }
+
+  const session = loginWithCredentials(payload.email, payload.password);
+  if (!session) {
+    return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
+  }
+
+  const store = await cookies();
+  store.set(SESSION_COOKIE_NAME, session.token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7
+  });
+
+  return NextResponse.json({ user: session.user });
 }

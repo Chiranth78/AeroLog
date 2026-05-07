@@ -19,7 +19,19 @@ import type {
   User
 } from "@aerodesign/shared";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+function resolveApiUrl() {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/api/backend`;
+  }
+
+  return "http://localhost:4000/api";
+}
+
+const API_URL = resolveApiUrl();
 
 interface MemberProfileResponse {
   user: User;

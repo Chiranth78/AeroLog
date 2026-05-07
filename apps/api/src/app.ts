@@ -50,3 +50,5 @@ app.use("/api/learning", learningRouter);
 app.use("/api/notifications", notificationsRouter);
 app.use("/api/reports", reportsRouter);
 app.use("/api/search", searchRouter);
+
+export default app;

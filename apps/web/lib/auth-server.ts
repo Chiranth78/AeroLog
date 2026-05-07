@@ -1,7 +1,8 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { APP_API_URL, SESSION_COOKIE_NAME } from "./auth-config";
+import { getUserFromSessionToken } from "./auth-local";
+import { SESSION_COOKIE_NAME } from "./auth-config";
 import type { AuthUser } from "./auth-types";
 
 export async function getSessionToken() {
@@ -16,16 +17,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   }
 
   try {
-    const response = await fetch(`${APP_API_URL}/auth/session/${token}`, {
-      cache: "no-store"
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = (await response.json()) as { user: AuthUser };
-    return data.user;
+    return getUserFromSessionToken(token);
   } catch {
     return null;
   }

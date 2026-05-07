@@ -1,21 +1,21 @@
 import { NextResponse } from "next/server";
-import { APP_API_URL } from "../../../../lib/auth-config";
+import { resetPasswordWithToken } from "../../../../lib/auth-local";
 
 export async function POST(request: Request) {
-  const payload = await request.json();
+  const payload = (await request.json()) as { token?: string; password?: string };
+
+  if (!payload.token || !payload.password) {
+    return NextResponse.json({ message: "Token and password are required" }, { status: 400 });
+  }
 
   try {
-    const response = await fetch(`${APP_API_URL}/auth/reset-password`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
+    const result = resetPasswordWithToken(payload.token, payload.password);
+    if ("error" in result) {
+      return NextResponse.json({ message: result.error }, { status: 404 });
+    }
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    return NextResponse.json({ message: "Password reset successful" });
   } catch {
-    return NextResponse.json({ message: "Backend auth service unavailable" }, { status: 503 });
+    return NextResponse.json({ message: "Invalid reset token" }, { status: 400 });
   }
 }
